@@ -1,0 +1,7 @@
+A B one_way 5
+B F one_way 1
+
+A C one_way 1
+C D local 1
+D E one_way 1
+E F one_way 1

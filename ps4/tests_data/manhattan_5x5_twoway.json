@@ -1,0 +1,31 @@
+{
+  "N0":  [["N1", 1, "local"], ["N5", 1, "local"]],
+  "N1":  [["N0", 1, "local"], ["N2", 1, "local"], ["N6", 1, "local"]],
+  "N2":  [["N1", 1, "local"], ["N3", 1, "local"], ["N7", 1, "local"]],
+  "N3":  [["N2", 1, "local"], ["N4", 1, "local"], ["N8", 1, "local"]],
+  "N4":  [["N3", 1, "local"], ["N9", 1, "local"]],
+
+  "N5":  [["N0", 1, "local"], ["N6", 1, "local"], ["N10", 1, "local"]],
+  "N6":  [["N1", 1, "local"], ["N5", 1, "local"], ["N7", 1, "local"], ["N11", 1, "local"]],
+  "N7":  [["N2", 1, "local"], ["N6", 1, "local"], ["N8", 1, "local"], ["N12", 1, "local"]],
+  "N8":  [["N3", 1, "local"], ["N7", 1, "local"], ["N9", 1, "local"], ["N13", 1, "local"]],
+  "N9":  [["N4", 1, "local"], ["N8", 1, "local"], ["N14", 1, "local"]],
+
+  "N10": [["N5", 1, "local"], ["N11", 1, "local"], ["N15", 1, "local"]],
+  "N11": [["N6", 1, "local"], ["N10", 1, "local"], ["N12", 1, "local"], ["N16", 1, "local"]],
+  "N12": [["N7", 1, "local"], ["N11", 1, "local"], ["N13", 1, "local"], ["N17", 1, "local"]],
+  "N13": [["N8", 1, "local"], ["N12", 1, "local"], ["N14", 1, "local"], ["N18", 1, "local"]],
+  "N14": [["N9", 1, "local"], ["N13", 1, "local"], ["N19", 1, "local"]],
+
+  "N15": [["N10", 1, "local"], ["N16", 1, "local"], ["N20", 1, "local"]],
+  "N16": [["N11", 1, "local"], ["N15", 1, "local"], ["N17", 1, "local"], ["N21", 1, "local"]],
+  "N17": [["N12", 1, "local"], ["N16", 1, "local"], ["N18", 1, "local"], ["N22", 1, "local"]],
+  "N18": [["N13", 1, "local"], ["N17", 1, "local"], ["N19", 1, "local"], ["N23", 1, "local"]],
+  "N19": [["N14", 1, "local"], ["N18", 1, "local"], ["N24", 1, "local"]],
+
+  "N20": [["N15", 1, "local"], ["N21", 1, "local"]],
+  "N21": [["N16", 1, "local"], ["N20", 1, "local"], ["N22", 1, "local"]],
+  "N22": [["N17", 1, "local"], ["N21", 1, "local"], ["N23", 1, "local"]],
+  "N23": [["N18", 1, "local"], ["N22", 1, "local"], ["N24", 1, "local"]],
+  "N24": [["N19", 1, "local"], ["N23", 1, "local"]]
+}

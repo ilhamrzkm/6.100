@@ -1,0 +1,10 @@
+A B one_way 1
+B C one_way 1
+C D one_way 1
+D E one_way 1
+
+A T1 toll 1
+T1 D one_way 1
+
+T1 T2 toll 1
+T2 E one_way 1

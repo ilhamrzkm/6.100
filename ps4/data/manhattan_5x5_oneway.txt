@@ -1,0 +1,49 @@
+N0 N1 one_way 1
+N1 N2 one_way 1
+N2 N3 one_way 1
+N3 N4 one_way 1
+
+N5 N6 one_way 1
+N6 N7 one_way 1
+N7 N8 one_way 1
+N8 N9 one_way 1
+
+N10 N11 one_way 1
+N11 N12 one_way 1
+N12 N13 one_way 1
+N13 N14 one_way 1
+
+N15 N16 one_way 1
+N16 N17 one_way 1
+N17 N18 one_way 1
+N18 N19 one_way 1
+
+N20 N21 one_way 1
+N21 N22 one_way 1
+N22 N23 one_way 1
+N23 N24 one_way 1
+
+
+N0 N5 one_way 1
+N1 N6 one_way 1
+N2 N7 one_way 1
+N3 N8 one_way 1
+N4 N9 one_way 1
+
+N5 N10 one_way 1
+N6 N11 one_way 1
+N7 N12 one_way 1
+N8 N13 one_way 1
+N9 N14 one_way 1
+
+N10 N15 one_way 1
+N11 N16 one_way 1
+N12 N17 one_way 1
+N13 N18 one_way 1
+N14 N19 one_way 1
+
+N15 N20 one_way 1
+N16 N21 one_way 1
+N17 N22 one_way 1
+N18 N23 one_way 1
+N19 N24 one_way 1

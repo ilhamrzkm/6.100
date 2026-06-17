@@ -1,0 +1,5 @@
+A B one_way 1
+B C one_way 1
+B D one_way 1
+C E one_way 1
+D E one_way 1

@@ -1,0 +1,48 @@
+N0 N1 local 1
+N1 N2 local 1
+N2 N3 local 1
+N3 N4 local 1
+
+N5 N6 local 1
+N6 N7 local 1
+N7 N8 local 1
+N8 N9 local 1
+
+N10 N11 local 1
+N11 N12 local 1
+N12 N13 local 1
+N13 N14 local 1
+
+N15 N16 local 1
+N16 N17 local 1
+N17 N18 local 1
+N18 N19 local 1
+
+N20 N21 local 1
+N21 N22 local 1
+N22 N23 local 1
+N23 N24 local 1
+
+N0 N5 local 1
+N1 N6 local 1
+N2 N7 local 1
+N3 N8 local 1
+N4 N9 local 1
+
+N5 N10 local 1
+N6 N11 local 1
+N7 N12 local 1
+N8 N13 local 1
+N9 N14 local 1
+
+N10 N15 local 1
+N11 N16 local 1
+N12 N17 local 1
+N13 N18 local 1
+N14 N19 local 1
+
+N15 N20 local 1
+N16 N21 local 1
+N17 N22 local 1
+N18 N23 local 1
+N19 N24 local 1
