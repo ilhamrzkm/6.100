@@ -3,9 +3,9 @@
 Problem Set 2
 
 Fill out the following info:
-Name: Sana Shah
-Kerberos: Sanashah
-Approximate time spent (HH:MM): 07:00 
+Name:
+Kerberos:
+Approximate time spent (HH:MM):
 """
 
 import random
@@ -16,7 +16,6 @@ import matplotlib.pyplot as plt
 ############################################################
 # supplied helper functions -- DO NOT MODIFY
 ############################################################
-
 
 TRACK_LENGTH = 16
 DEFAULT_SPEED = 2
@@ -71,12 +70,7 @@ def get_distance(loc1, loc2):
 
     Return distance from loc1 to loc2
     """
-    distance = loc2 - loc1 
-    if distance < 0: 
-        distance += TRACK_LENGTH
-    
-    return distance 
-    
+    raise NotImplementedError
 
 
 def get_next_station(current_loc, station_locations):
@@ -93,11 +87,11 @@ def get_next_station(current_loc, station_locations):
     # TODO: after writing test cases, fix this buggy staff implementation!
     # you should only need to edit 2 lines of code
 
-    max_distance = TRACK_LENGTH #change from 0 to track length 
+    max_distance = 0
     closest_station = None
 
     for station in station_locations:
-        station_distance = get_distance(current_loc, station) #flip current_loc and station so that get_dist does subtraction correctly 
+        station_distance = get_distance(station, current_loc)
         if station_distance < max_distance and current_loc != station:
             closest_station = station
             max_distance = station_distance
@@ -149,28 +143,8 @@ def step_train(idx, train_locations, idle_time, station_locations, speed):
     - the train does not move if it would pass another at this speed.
     - the train stops at any station it would pass.
     """
-    current_loc = train_locations[idx]
-    next_loc = (train_locations[idx] + speed) % TRACK_LENGTH
-    
-    if idle_time[idx] > 0:
-        idle_time[idx] -= 1
-        return current_loc
-   
-    for i in range(len(train_locations)):    
-        if idx != i and would_pass(current_loc, next_loc, train_locations[i]):
-            return current_loc
-        
-    for i in range(len(station_locations)):
-            if would_pass(current_loc, next_loc, station_locations[i]):               
-                for j in range(len(train_locations)):
-                    if idx != j and would_pass(current_loc, next_loc, train_locations[j]):
-                        idle_time[idx] = 1
-                        return current_loc
-                if current_loc == station_locations[i]:
-                    continue    
-                idle_time[idx] = 2
-                return station_locations[i]
-    return (train_locations[idx] + speed) % TRACK_LENGTH
+    raise NotImplementedError
+
 
 def step_simulation(
     train_locations,
@@ -178,7 +152,7 @@ def step_simulation(
     idle_time,
     slowdown_func=None,
     slowdown_param=None,
-    speed = float(DEFAULT_SPEED)
+    speed=float(DEFAULT_SPEED),
 ):
     """
     Determine the new positions of all the trains after one time step of
@@ -188,37 +162,23 @@ def step_simulation(
         train_locations (list): The same as in step_train().
         station_locations (list): The same as in step_train().
         idle_time (list): The same as in step_train().
+        slowdown_func (function or None): Optional slowdown function from
+            section 4. Takes a single parameter and returns a speed.
+        slowdown_param (float or None): Parameter passed to slowdown_func.
         speed (float): The speed of the train (miles per time step).
 
     Return a list containing the new positions of each train one time
     step later, and mutate the idle_time list for all trains.
     """
-    current_speed = speed
-                                                   
-    if slowdown_func == apply_gaussian_slow:        
-        current_speed = apply_gaussian_slow(slowdown_param)
-    elif slowdown_func == apply_halt:
-        current_speed = apply_halt(slowdown_param)
-    elif slowdown_func == apply_uniform_slow:
-        current_speed = apply_uniform_slow(slowdown_param)
-
-    New_train_locations = []    
-
-    for i in range(len(train_locations)):                            
-        new_loc = step_train(i, train_locations, idle_time, station_locations, current_speed)
-        New_train_locations.append(new_loc)
-    return New_train_locations 
-    
-    
-
+    raise NotImplementedError
 
 
 def simulate_trains(
     station_locations,
     num_steps,
-    slowdown_func= None,
+    slowdown_func=None,
     slowdown_param=None,
-    speed = float(DEFAULT_SPEED)
+    speed=float(DEFAULT_SPEED),
 ):
     """
     Run one MBTA simulation for num_steps steps, with each train starting
@@ -227,17 +187,12 @@ def simulate_trains(
     Parameters:
         station_locations (list): The same as in step_train().
         num_steps (int): The number of time steps to simulate.
-        # TODO (section 4): add optional parameters!
+        # TODO (section 4): use the optional slowdown parameters!
 
     Return a nested list of length num_steps+1, where each element is a
     list of the train locations at a timestep.
     """
-    trains = station_locations.copy()                   
-    idle_time = [2]*len(station_locations)
-    Train_History = [trains.copy()]
-    for i in range(num_steps):                     
-        Train_History.append(step_simulation(Train_History[i], station_locations, idle_time, slowdown_func, slowdown_param))
-    return Train_History
+    raise NotImplementedError
 
 
 ############################################################
@@ -259,19 +214,7 @@ def station_wait_times(location_history, station):
     Return a list of all the intertrain wait times at this specific
     station across the simulation history.
     """
-    arrivals = []
-    departures =[]
-
-    for t in range(len(location_history)):                        
-        for i in range(len(location_history[0])):                    
-            if location_history[t][i] == station:                    
-                if t > 0 and location_history[t-1][i] != station:  
-                    arrivals.append(t)
-                if t+1 < len(location_history) and location_history[t+1][i] != station:
-                    departures.append(t)
-        
-    wait_times = [a - d for a, d in zip(arrivals, departures)]  
-    return wait_times
+    raise NotImplementedError
 
 
 def collect_all_wait_times(location_history, station_locations):
@@ -287,14 +230,7 @@ def collect_all_wait_times(location_history, station_locations):
 
     Return a list of wait times.
     """
-    wait_time_nested = []
-
-    for i in range(len(station_locations)):
-        wait_time_nested.append(station_wait_times(location_history, station_locations[i]))
-    flattened = [i for s in wait_time_nested for i in s]             
-    flattened.sort()
-
-    return flattened
+    raise NotImplementedError
 
 
 ############################################################
@@ -325,10 +261,7 @@ def apply_halt(p):
 
     Return 0 if the train halts, otherwise the default speed.
     """
-    if p > random.random():    
-        return 0
-    
-    return DEFAULT_SPEED
+    raise NotImplementedError
 
 
 def apply_uniform_slow(param):
@@ -342,8 +275,8 @@ def apply_uniform_slow(param):
 
     Return the updated train speed after applying a uniform slowdown.
     """
-    new_speed = random.uniform(0, DEFAULT_SPEED)     
-    return new_speed
+    raise NotImplementedError
+
 
 def apply_gaussian_slow(sigma):
     """
@@ -358,13 +291,7 @@ def apply_gaussian_slow(sigma):
     If the updated speed is outside of [0, DEFAULT_SPEED], clip it to be
     in that range.
     """
-    new_speed = random.gauss(mu = (DEFAULT_SPEED/2), sigma = sigma) 
-    if new_speed > DEFAULT_SPEED:
-        new_speed = DEFAULT_SPEED
-
-    if new_speed < 0:
-        new_speed = 0
-    return new_speed
+    raise NotImplementedError
 
 
 def run_monte_carlo(
@@ -391,19 +318,7 @@ def run_monte_carlo(
     mean and standard deviation of the average intertrain wait time for
     each trial, along with a location_history from any trial.
     """
-    trial_mean = 0.0
-    trial_stdev = 0.0
-
-    for _ in range(num_trials): 
-        Location_history = simulate_trains(station_locations, num_steps, slowdown_func, slowdown_param)    
-        data =collect_all_wait_times(Location_history, station_locations)
-        trial_mean += compute_mean(data)
-        trial_stdev += compute_standard_deviation(data)
-
-    mean = trial_mean/num_trials 
-    stdev = trial_stdev/num_trials
-
-    return [mean, stdev, Location_history]
+    raise NotImplementedError
 
 
 ############################################################
@@ -430,13 +345,7 @@ def plot_wait_time_distribution(
             (for labeling purposes).
         bins (int): The number of bins to use in the histogram plot.
     """
-    wait_times = collect_all_wait_times(location_history, station_locations)
-
-    plt.hist(wait_times, bins=bins)
-    plt.title(f"Wait Time Distribution ({slowdown_name})")
-    plt.xlabel("Wait Time")
-    plt.ylabel("Frequency")
-    plt.show()
+    raise NotImplementedError
 
 
 def plot_monte_carlo_distributions(
@@ -462,23 +371,7 @@ def plot_monte_carlo_distributions(
         param_name (str): The name of the parameter being varied
             (for labeling purposes).
     """
-    means = []
-
-    for param in slowdown_param_values:
-        mean, _, _ = run_monte_carlo(
-            station_locations,
-            num_steps,
-            slowdown_func,
-            param,
-            num_trials,
-        )
-        means.append(mean)
-
-    plt.plot(slowdown_param_values, means)
-    plt.xlabel(param_name)
-    plt.ylabel("Average Wait Time")
-    plt.title(f"Effect of {param_name} on Wait Time")
-    plt.show()
+    raise NotImplementedError
 
 
 ############################################################
@@ -511,30 +404,19 @@ def get_sample_scenario():
     return [sample_scenario_stations, sample_scenario_history]
 
 
-# def manual_test_step_train():
-#     print("Manual test step_train...")
-#     station_locs = [0.5, 8, 13]
-#     train_locs = [0.5, 6.5, 13]
-#     idle_time = [0, 0, 1] # train 0 and 1 moving, train 2 idle
-#     print(f"train idx={1}", f"{station_locs=}", f"{train_locs=}", f"{idle_time=}")
-
-#     # train 1 should move to a station (6.5 -> 8)
-#     new_loc = step_train(1, train_locs, idle_time, station_locs, DEFAULT_SPEED)
-#     print(f"Expected location: {8}, got {new_loc}")
-#     print(f"Expected idle time: {[0, 2, 1]}, got {idle_time}")
-#     print()
-
 def manual_test_step_train():
     print("Manual test step_train...")
     station_locs = [0.5, 8, 13]
-    train_locs = [3, 6.5, 15.9]
-    idle_time = [0, 0, 0] # train 0 and 1 moving, train 2 idle
-    print(f"train idx={2}", f"{station_locs=}", f"{train_locs=}", f"{idle_time=}")
+    train_locs = [0.5, 6.5, 13]
+    idle_time = [0, 0, 1] # train 0 and 1 moving, train 2 idle
+    print(f"train idx={1}", f"{station_locs=}", f"{train_locs=}", f"{idle_time=}")
 
     # train 1 should move to a station (6.5 -> 8)
-    new_loc = step_train(2, train_locs, idle_time, station_locs, DEFAULT_SPEED)
-    print(f"Expected location: {13.1}, got {new_loc}")
+    new_loc = step_train(1, train_locs, idle_time, station_locs, DEFAULT_SPEED)
+    print(f"Expected location: {8}, got {new_loc}")
+    print(f"Expected idle time: {[0, 2, 1]}, got {idle_time}")
     print()
+
 
 def manual_test_step_simulation():
     print("Manual test step_simulation...")
@@ -544,7 +426,7 @@ def manual_test_step_simulation():
     print(f"{station_locs=}", f"{train_locs=}", f"{idle_time=}")
 
     # train 0 moves regular, train 1 moves to station, train 2 idle
-    new_locations = step_simulation(train_locs, station_locs, idle_time, DEFAULT_SPEED)
+    new_locations = step_simulation(train_locs, station_locs, idle_time)
     print(f"Expected locations: {[2.5, 8, 13]}, got {new_locations}")
     print(f"Expected idle time: {[0, 2, 0]}, got {idle_time}")
     print()
@@ -566,7 +448,6 @@ def manual_test_simulate_trains():
 
 def manual_test_station_wait_times():
     print("Testing station_wait_times w/ sample scenario...")
-    # stations located at 5, 6, and 8. check for wait times at 8
     location_history = get_sample_scenario()[1]
     wait_times = station_wait_times(location_history, station=8)
     print(f"Expected wait times: {[2, 2, 5]}, got {sorted(wait_times)}")
@@ -611,7 +492,6 @@ def manual_test_plot_wait_time_distribution():
     station_locations = [2.5, 7, 8.75, 13]
     num_steps = 500
 
-    # no slowdown
     location_history = simulate_trains(station_locations, num_steps)
     plot_wait_time_distribution(location_history, station_locations, slowdown_name="apply_none")
 
@@ -645,43 +525,34 @@ def manual_test_plot_monte_carlo_distributions():
     )
     print()
 
+
 def manual_test_get_next_station_general():
-    print("Testing get_next_station_ general case...")
+    print("Testing get_next_station general case...")
     station_locs = [0.5, 8, 13]
     train_loc = 0.6
     next_station = get_next_station(train_loc, station_locs)
-    if next_station == 8:
-        print(True)
-        return True  
-    else: 
-        print(False)
-        return False  
+    print(f"Expected 8, got {next_station}")
+
 
 def manual_test_get_next_station_edge():
     print("Testing get_next_station edge case...")
     station_locs = [0.5, 8, 13]
     train_loc = 0.5
     next_station = get_next_station(train_loc, station_locs)
-    if next_station == 8:
-        print(True)
-        return True  
-    else: 
-        print(False)
-        return False  
+    print(f"Expected 8 (next station, not current), got {next_station}")
 
 
 if __name__ == "__main__":
     pass
-
-    # manual_test_get_next_station_general()
-    # manual_test_get_next_station_edge()
 
     # Uncomment the function calls below to test manually.
     # Note these are not comprehensive tests.
     # Feel free to modify or extend them when debugging your code.
     # Run test.py to make sure your code passes all our test cases.
 
-    manual_test_step_train()
+    # manual_test_get_next_station_general()
+    # manual_test_get_next_station_edge()
+    # manual_test_step_train()
     # manual_test_step_simulation()
     # manual_test_simulate_trains()
     # manual_test_station_wait_times()

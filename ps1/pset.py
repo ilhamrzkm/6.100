@@ -1,11 +1,11 @@
 """
-6.100 Fall 2025
+6.100 Spring 2026
 Problem Set 1
 
 Fill out the following info:
-Name: Sana Shah 
-Kerberos: sanashah
-Approximate time spent (HH:MM): 04:00 
+Name:
+Kerberos:
+Approximate time spent (HH:MM):
 """
 
 import string
@@ -69,56 +69,32 @@ def is_word(text):
 ############################################################
 
 
-def crypt_char(char, alphabet, shift, encrypt):
-    """
-    Encrypt or Decrypt a character   
-    
-    Parameters: 
-        char (str): The character that is being encrypted 
-        alphabet (str): The ordered alphabet which we are doing the ceaser cipher 
-        shift (int): The number of positions to shift the character by  
-        encrypt (bool): Specifying encrypt vs decrypt (true vs false)
-    
-    Return the encrypted value based on the shift 
-    """
-    i_shift = shift 
-
-    if not encrypt:
-        i_shift *= -1   #checks for encrypt or decrypt 
-    
-    index = alphabet.find(char)
-    new_index = (index + i_shift) % len(alphabet)   #creates new index number based on shift 
-    return alphabet[new_index]  # new index is put back in the alphabet 
-
 def encrypt_char(char, alphabet, shift):
     """
-    Encrypt a character using ceaser cipher   
-    Parameters: 
-        char (str): The character that is being encrypted 
-        alphabet (str): The ordered alphabet which we are doing the ceaser cipher 
-        shift (int): The number of positions to shift the character by  
-    
-    Return the encrypted value based on the shift 
+    Encrypt a character using Caesar cipher.
+
+    Parameters:
+        char (str): The character that is being encrypted.
+        alphabet (str): The ordered alphabet which we are doing the Caesar cipher.
+        shift (int): The number of positions to shift the character by.
+
+    Return the encrypted value based on the shift.
     """
-    encrypt = True 
-    return crypt_char(char, alphabet, shift, encrypt) # return crypt_char with encrypt as True 
+    raise NotImplementedError
 
 
 def decrypt_char(char, alphabet, shift):
     """
-    Decrypt a character using ceaser cipher   
+    Decrypt a character using Caesar cipher.
 
-    Parameters: 
-        char (str): The character that is being encrypted 
-        alphabet (str): The ordered alphabet which we are doing the ceaser cipher 
-        shift (int): The number of positions to shift the character by   
+    Parameters:
+        char (str): The character that is being decrypted.
+        alphabet (str): The ordered alphabet which we are doing the Caesar cipher.
+        shift (int): The number of positions to shift the character by.
 
-    Returns the decrypted value based on the shift 
+    Return the decrypted value based on the shift.
     """
-
-    encrypt = False 
-    return crypt_char(char, alphabet, shift, encrypt) # return crypt_char with encrypt as False (decrypt)
-    
+    raise NotImplementedError
 
 
 def encrypt(plaintext, alphabet, initial_shift, magic_number):
@@ -137,21 +113,7 @@ def encrypt(plaintext, alphabet, initial_shift, magic_number):
 
     Return the encrypted ciphertext str corresponding to plaintext.
     """
-    
-    shift = initial_shift
-
-    shifted = ""    # will be the encrypted cypher 
-
-    for c in plaintext:     # loops through every character in (str) plaintext 
-        if c in alphabet:       # checks that character is in alphabet 
-            index = alphabet.find(c)
-            new_index = (index + shift) % len(alphabet)
-            shifted += alphabet[new_index]
-            if new_index % magic_number == 0:   # checks if a multiple of magic number 
-                shift +=1
-        else: 
-                shifted += c
-    return shifted      # returns encrypted string 
+    raise NotImplementedError
 
 
 def decrypt(ciphertext, alphabet, initial_shift, magic_number):
@@ -166,21 +128,7 @@ def decrypt(ciphertext, alphabet, initial_shift, magic_number):
 
     Return the decrypted plaintext str corresponding to ciphertext.
     """
-    shift = initial_shift
-
-    shifted = ""    # will be the decrypted cypher 
-
-    for c in ciphertext:     # loops through every character in (str) ciphertext 
-        if c in alphabet:      # checks that character is in alphabet 
-            index = alphabet.find(c)
-            new_index = (index - shift) % len(alphabet) #subtract the shift 
-            shifted += alphabet[new_index]
-            if index % magic_number == 0: # checks if orginal index is a multiple of magic number 
-                shift += 1
-
-        else: 
-                shifted += c
-    return shifted  # returns decrypted string
+    raise NotImplementedError
 
 
 ############################################################
@@ -203,19 +151,7 @@ def count_words(text):
     Candidate words are the sequences of characters between valid
     separators.
     """
-    temp = ""       # temporarily stores characters for the current word 
-    count = 0  # number of valid english words 
-    text = text.lower()     # convert text to lowercase 
-    text = text + " "
-    
-    for c in text:  # loop through every character in (str) test 
-        if c in separators: # if the character is a separtor, the current word has ended 
-            if is_word(temp):  # check if all the current characters form an english word 
-                count +=1 
-            temp = ""   # reset for next word 
-        else: # else add another character to the current word 
-            temp += c 
-    return count    #returns total number of valid english words 
+    raise NotImplementedError
 
 
 def break_cipher(ciphertext, alphabet):
@@ -232,18 +168,7 @@ def break_cipher(ciphertext, alphabet):
     all possible plaintexts. If there is more than one such plaintext,
     return any of them.
     """
-    plaintext = ""
-    count = -1      # start at -1 so that solution is in range 
-
-    for magic_number in range(1, 100):  # checks for magix numbers between 1 and 99 
-        for initial_shift_base in range(87):    # size of alphabet is 86 characters so shift is in that range
-            temp = decrypt(ciphertext, alphabet, initial_shift_base, magic_number)
-            num = count_words(temp)
-
-            if num>count:  # if number of words is greater than a prev count, stores best answer 
-                plaintext = temp 
-                count = num
-    return plaintext    # returns most English words out of all possible plaintexts
+    raise NotImplementedError
 
 
 ############################################################

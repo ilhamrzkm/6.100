@@ -3,9 +3,9 @@
 Problem Set 4
 
 Fill out the following info:
-Name: Sana Shah 
-Kerberos: sanashah
-Approximate time spent (HH:MM): 14:00 
+Name:
+Kerberos:
+Approximate time spent (HH:MM):
 """
 
 import matplotlib.pyplot as plt
@@ -36,24 +36,7 @@ def build_graph(filepath):
 
     If a node has no outgoing edges, map it to an empty list.
     """
-    node_dict = {}
-    with open(filepath, 'r') as file: 
-        for line in file:
-            if not line.strip():  # skip blank lines
-                continue
-            node1, node2, edge_type, weight = line.split()
-            weight = int(weight)
-            if node1 not in node_dict: #check if nodes exist 
-                node_dict[node1] = []
-            if node2 not in node_dict: 
-                node_dict[node2] = []
-            
-            if edge_type == "one_way": #only goes from node1 to node2
-                node_dict[node1].append((node2, weight, edge_type))
-            elif edge_type in ("local", "toll"): #two-way 
-                node_dict[node1].append((node2, weight, edge_type))
-                node_dict[node2].append((node1, weight, edge_type))
-    return node_dict
+    raise NotImplementedError
 
 ############################################################
 # breath-first search
@@ -73,24 +56,7 @@ def bfs(graph, start, goal):
     Return a list of nodes representing the path from start to goal,
     or None if no path exists.
     """
-    if start == goal: #start and goal are same 
-        return [start]
-    
-    queue = [[start]] # start to current node 
-    visited = {start} #track nodes that have been visited 
-    
-    while queue:
-        path = queue.pop(0)
-        node = path[-1] #current node is last in path 
-        
-        for neighbor, weight, edge_type in neighbors(graph, node):
-            if neighbor == goal: #if we reach goal append 
-                return path + [neighbor]
-            if neighbor not in visited:
-                visited.add(neighbor)
-                queue.append(path + [neighbor]) #add neighbor 
-    
-    return None
+    raise NotImplementedError
 
 ############################################################
 # weighted graph search
@@ -110,18 +76,7 @@ def expand_edge_iterative(expanded_graph, u, v, weight):
     Mutate expanded_graph by adding the necessary intermediate
     nodes and edges to represent the weighted edge.
     """
-    if weight == 1: #no intermediate 
-        expanded_graph[u].append((v, 1, "local"))
-        return
-    
-    current = u
-    for i in range(weight - 1): #intermediate nodes 
-        intermediate = f"{u}_{v}_intermediate_{i}" #unique names even if node is in multiple edges 
-        expanded_graph[intermediate] = []
-        expanded_graph[current].append((intermediate, 1, "local")) #connect prev node to this intermediate 
-        current = intermediate
-    
-    expanded_graph[current].append((v, 1, "local")) #connect last to final 
+    raise NotImplementedError
 
 
 def expand_edge_recursive(expanded_graph, u, v, weight):
@@ -137,14 +92,7 @@ def expand_edge_recursive(expanded_graph, u, v, weight):
     Mutate expanded_graph by adding the necessary intermediate
     nodes and edges to represent the weighted edge.
     """
-    if weight == 1: #no intermediates 
-        expanded_graph[u].append((v, 1, "local"))
-        return
-    
-    intermediate = f"{u}_{v}_intermediate_{weight}" #one intermediate for first step 
-    expanded_graph[intermediate] = []
-    expanded_graph[u].append((intermediate, 1, "local")) #connect u to intermediate w/ weight edge 
-    expand_edge_recursive(expanded_graph, intermediate, v, weight - 1) #recursively expand 
+    raise NotImplementedError
 
 
 def expand_weighted_graph(weighted_graph, expand_edge_fn):
@@ -159,13 +107,7 @@ def expand_weighted_graph(weighted_graph, expand_edge_fn):
 
     Return a graph dictionary similar to build_graph(), but with expanded edges.
     """
-    expanded_graph = {node: [] for node in weighted_graph} #all nodes mapped to empty list 
-    
-    for u in weighted_graph: #expand every edge 
-        for (v, weight, edge_type) in weighted_graph[u]:
-            expand_edge_fn(expanded_graph, u, v, weight)
-    
-    return expanded_graph
+    raise NotImplementedError
 
 
 def strip_intermediate_nodes(path):
@@ -177,10 +119,7 @@ def strip_intermediate_nodes(path):
 
     Return a list of original graph nodes only, or None if the input path is None.
     """
-    if path is None:
-        return None
-    
-    return [node for node in path if "_intermediate_" not in node] #anything without intermediate is original node 
+    raise NotImplementedError
 
 
 def find_shortest_path(
@@ -203,10 +142,7 @@ def find_shortest_path(
 
     Return a list of nodes representing the shortest path, or None if no path exists.
     """
-    graph = build_graph(filepath) 
-    expanded = expand_weighted_graph(graph, expand_edge_fn) #unit-weighted edges 
-    path = pathfinding_algorithm(expanded, start, goal) #bfs on expanded graph 
-    return strip_intermediate_nodes(path) #remove intermediate 
+    raise NotImplementedError
 
 
 ############################################################
@@ -235,22 +171,7 @@ def build_layered_graph_for_tolls(graph, max_tolls):
     where neighbor_node is a string, new_tolls_used is an int,
     weight is an int, and edge_type is a string.
     """
-    layered = {}
-    
-    for node in graph:  #max_tolls+1 layers
-        for t in range(max_tolls + 1):
-            layered[(node, t)] = []
-    
-    for node in graph:
-        for (neighbor, weight, edge_type) in graph[node]:
-            for t in range(max_tolls + 1): #toll edges move up one layer
-                if edge_type == "toll": #only if haven't hit toll limit yet
-                    if t < max_tolls:
-                        layered[(node, t)].append(((neighbor, t + 1), weight, edge_type))
-                else: #non-toll edges 
-                    layered[(node, t)].append(((neighbor, t), weight, edge_type))
-    
-    return layered
+    raise NotImplementedError
 
 
 def strip_toll_state(path):
@@ -264,9 +185,7 @@ def strip_toll_state(path):
     Return a list of original node names in order, or None if the
     input path is None.
     """
-    if path is None:
-        return None
-    return [node if isinstance(node, str) else node[0] for node in path] #get just the name 
+    raise NotImplementedError
 
 
 def find_shortest_path_with_tolls(
@@ -284,26 +203,7 @@ def find_shortest_path_with_tolls(
 
     Return a list of nodes representing the path, or None if no valid path exists.
     """
-    graph = build_graph(filepath)
-    layered = build_layered_graph_for_tolls(graph, max_tolls) #track tolls used 
-    expanded = expand_weighted_graph(layered, expand_edge_iterative) #unit weighted 
-    
-    
-    expanded["GOAL_SINK"] = [] # add sink to expanded graph so all goals are counted 
-    for t in range(max_tolls + 1):
-        goal_state = (goal, t)
-        if goal_state in expanded:
-            expanded[goal_state].append(("GOAL_SINK", 1, "local"))
-    
-    path = pathfinding_algorithm(expanded, (start, 0), "GOAL_SINK") #run bfs 
-    
-    if path is None:
-        return None
-    
-    path = path[:-1]  # remove GOAL_SINK
-    path = strip_toll_state(path)       # remove (node, t) tuples -> node names
-    path = strip_intermediate_nodes(path)  # remove intermediate expansion nodes
-    return path
+    raise NotImplementedError
 
 
 ############################################################
@@ -322,14 +222,7 @@ def reconstruct_path(pred, start, goal):
 
     Return a list of nodes representing the path from start to goal.
     """
-    path = []
-    current = goal
-    while current != start: #go backwards from goal to start 
-        path.append(current)
-        current = pred[current]
-    path.append(start) #add start node then reverse for correct order 
-    path.reverse()
-    return path
+    raise NotImplementedError
 
 
 def bfs_predecessors(graph, start, goal):
@@ -347,23 +240,7 @@ def bfs_predecessors(graph, start, goal):
     Return a list of nodes representing the path from start to goal,
     or None if no path exists.
     """
-    if start == goal: #when start is equal to goal 
-        return [start]
-    
-    queue = [start] #stores only nodes 
-    pred = {start: None} #start has nothing before it 
-    
-    while queue:
-        node = queue.pop(0)
-        
-        for neighbor, weight, edge_type in neighbors(graph, node):
-            if neighbor not in pred: #unvisted neighbors 
-                pred[neighbor] = node
-                if neighbor == goal: #if we find the goal reconstruct and return the goal 
-                    return reconstruct_path(pred, start, goal)
-                queue.append(neighbor)
-    
-    return None
+    raise NotImplementedError
 
 def generate_grid_graph(n):
     """
@@ -394,7 +271,7 @@ def generate_grid_graph(n):
             node = f"N{index}"
 
             # up
-            if row >= 0: # no equal should be within the bounds (for all if statements)
+            if row >= 0:
                 neighbor = f"N{(row - 1) * n + col}"
                 graph[node].append((neighbor, 1, "local"))
 
@@ -510,14 +387,6 @@ def manual_test_bfs_twoway_vs_oneway_reachability():
 
 
 def manual_test_find_shortest_path_small_weighted():
-    # demonstrates failure of BFS for weighted graphs
-    # graph = build_graph("data/small_weighted_mixed.txt")
-    # path = bfs(graph, "A", "F")
-
-    # print("BFS path (ignores weights):")
-    # print(path_to_string(path))
-    # expected: A-->B-->F, which is incorrect for a weighted graph
-
     path = find_shortest_path("data/small_weighted_mixed.txt", "A", "F")
 
     print("Shortest path using expansion:")
@@ -537,30 +406,8 @@ def manual_test_bfs_predecessors_manhattan_one_way_grid():
     print(path_to_string(path))
     print()
 
-    # expected:
-    # a valid shortest path from N0 to N24 with 9 nodes (8 moves).
-    # the exact path may vary depending on neighbor ordering, but it should:
-    #   - start with N0
-    #   - end with N24
-    #   - move only along edges in the graph
-    # example:
-    # N0-->N1-->N2-->N3-->N4-->N9-->N14-->N19-->N24
-
 
 def manual_test_toll_layering():
-    """
-    Manually test toll-constrained shortest paths on a small graph.
-
-    Expected:
-        max_tolls = 0
-            prints: A-->B-->C-->D-->E
-        max_tolls = 1
-            prints: A-->T1-->D-->E
-        max_tolls = 2
-            prints: A-->T1-->T2-->E or A-->T1-->D-->E,
-            depending on neighbor ordering in the graph.
-            Both are valid shortest paths with at most 2 tolls.
-    """
     filepath = "data/small_toll_test.txt"
 
     for k in [0, 1, 2]:
@@ -571,25 +418,6 @@ def manual_test_toll_layering():
 
 
 def manual_test_visualize_paths():
-    """
-    Manually test graph visualization with highlighted shortest paths.
-
-    This function:
-        - Runs pathfinding on several provided data files.
-        - Visualizes the graph.
-        - Highlights the computed path.
-        - Highlights the start and goal nodes.
-
-    Expected:
-        The start node appears in green.
-        The goal node appears in orange.
-        The selected shortest path appears in red.
-        Path nodes are highlighted in light coral.
-    """
-
-    # ---------------------------------------------------------
-    # test 1: 5x5 manhattan (one-way)
-    # ---------------------------------------------------------
     filepath = "data/manhattan_5x5_oneway.txt"
     graph = build_graph(filepath)
     path = bfs(graph, "N0", "N24")
@@ -598,9 +426,6 @@ def manual_test_visualize_paths():
     print("Path:", path_to_string(path))
     visualize_graph_with_path(graph, path, start="N0", goal="N24", n=5)
 
-    # ---------------------------------------------------------
-    # test 2: 5x5 manhattan (two-way)
-    # ---------------------------------------------------------
     filepath = "data/manhattan_5x5_twoway.txt"
     graph = build_graph(filepath)
     path = bfs(graph, "N24", "N0")
@@ -609,26 +434,16 @@ def manual_test_visualize_paths():
     print("Path:", path_to_string(path))
     visualize_graph_with_path(graph, path, start="N24", goal="N0", n=5)
 
-    # ---------------------------------------------------------
-    # test 3: small weighted mixed graph
-    # ---------------------------------------------------------
     filepath = "data/small_weighted_mixed.txt"
     graph = build_graph(filepath)
-
-    # Use weighted shortest path via expansion
     path = find_shortest_path(filepath, "A", "F")
 
     print("Visualizing small weighted graph")
     print("Shortest weighted path:", path_to_string(path))
     visualize_graph_with_path(graph, path, start="A", goal="F")
 
-    # ---------------------------------------------------------
-    # test 4: 5x5 weighted graph
-    # ---------------------------------------------------------
     filepath = "data/5x5_weighted.txt"
     graph = build_graph(filepath)
-
-    # Use weighted shortest path via expansion
     path = find_shortest_path(filepath="data/5x5_weighted.txt", start="N0", goal="N24")
 
     print("Visualizing 5x5 weighted graph")
@@ -637,21 +452,8 @@ def manual_test_visualize_paths():
 
 
 def manual_test_compare_bfs_versions():
-    """
-    Manually compare the runtime of BFS (path copying) and
-    BFS with predecessors on increasing grid sizes.
-
-    For each grid size n, generate an n by n grid graph and
-    measure the runtime of both algorithms when finding a path
-    from the top-left node to the bottom-right node.
-
-    Expected:
-        Both algorithms should return valid paths.
-        BFS with predecessors may run faster for larger grids,
-        since it avoids repeatedly copying full paths.
-    """
     sizes = []
-    for k in range(1, 21):  # 10x10 up to 210x210
+    for k in range(1, 21):
         sizes.append(10 * k)
 
     compare_bfs_implementations(

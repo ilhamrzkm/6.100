@@ -3,9 +3,9 @@
 Problem Set 5
 
 Please fill out the following info:
-Name: Sana Shah
-Kerberos: sanashah
-Approximate time spent (HH:MM): 06:00
+Name:
+Kerberos:
+Approximate time spent (HH:MM):
 """
 
 import matplotlib.pyplot as plt
@@ -36,29 +36,7 @@ def create_graph(filename):
     Return a dict that maps each town name (str) to a list of
     neighboring towns.
     """
-    graph = {}
-    with open(filename, 'r') as file: #read mode 
-        for line in file: #loop through each file 
-            line = line.strip() #remove empty space from line
-            parts = line.split(',')
-            towns = []
-
-            for t in parts:
-                towns.append(t.strip()) #remove empty space from town names 
-            for town in towns:  
-                if town not in graph:
-                    graph[town] = [] #creates an empty list for every town 
-
-            for i in range(len(towns)): #loops through the unique pairs of towns     
-                for j in range(i + 1, len(towns)):
-                    town1, town2 = towns[i], towns[j] 
-                    if town2 not in graph[town1]: #add each town to eachothers list of neighboring towns 
-                        graph[town1].append(town2)
-                    if town1 not in graph[town2]:
-                        graph[town2].append(town1)
-    return graph
-
-
+    raise NotImplementedError
 
 
 ############################################################
@@ -79,15 +57,9 @@ def powerset(items):
     objects from items.
     """
     # base case: empty set has a single empty combination
-    if len(items) == 0:
-        return [set()]
-
     # recursive case: include first item or not with each subset of the
     # remaining items
-    first, rest = items[0], items[1:]
-    combos_without = powerset(rest)
-    combos_with = [combo | {first} for combo in combos_without]
-    return combos_without + combos_with
+    raise NotImplementedError
 
 
 def compute_town_combos_naive(town_populations, num_districts):
@@ -104,20 +76,8 @@ def compute_town_combos_naive(town_populations, num_districts):
     Return a list of town combinations, each represented as a set of
     towns, where each town is a str.
     """
-    avg_population = sum(town_populations.values())/num_districts 
-    lower = avg_population - 0.1*avg_population #calculate the bounds (+or- 10%)
-    upper = avg_population + 0.1*avg_population
-    all_combos = powerset(list(town_populations.keys())) #gets all possible combinations of towns
-    
-    valid = [] #list of combos that fit population constraint 
-    for combo in all_combos: 
-        combo_population = [] #total population of the combo
-        for town in combo: #go through ever town in the combo and add their populations 
-            combo_population.append(town_populations[town])
-        sum_pop = sum(combo_population)
-        if sum_pop >= lower and sum_pop <= upper: #if the combo meets population constraints add to valid combos
-            valid.append(combo)
-    return valid 
+    raise NotImplementedError
+
 
 ############################################################
 # generate valid districts by checking connectivity on town combinations
@@ -134,16 +94,8 @@ def create_subgraph(graph, nodes):
 
     Return a new dict representing the subgraph.
     """
-    subgraph = {}
-    for node in nodes: 
-        neighbors = graph[node] #full list of neighboring nodes
-        valid_neighbors = []
-        for neighbor in neighbors: 
-            if neighbor in nodes: #check if neighbor is in valid nodes for district 
-                valid_neighbors.append(neighbor)
-        subgraph[node] = valid_neighbors
+    raise NotImplementedError
 
-    return subgraph   
 
 def find_nodes_within_distance(graph, start, depth):
     """
@@ -158,27 +110,7 @@ def find_nodes_within_distance(graph, start, depth):
     Return a set of all nodes reachable from start that are no more than
     depth edges away.
     """
-    if depth == 0: #change base case from finding goal to depth = 0 
-        return [start]
-
-    current_frontier = [start]
-    next_frontier = []
-    # store a VISITED SET of nodes already seen
-    visited = {start}
-    current_depth = 0
-
-    while len(current_frontier) > 0 and current_depth < depth: #add depth 
-        for node in current_frontier:
-            for next_node in graph[node]:
-                if next_node in visited:
-                    continue
-                visited.add(next_node)
-                next_frontier.append(next_node)
-
-        current_frontier, next_frontier = next_frontier, []
-        current_depth += 1
-
-    return visited
+    raise NotImplementedError
 
 
 def is_compact(graph, towns, max_distance):
@@ -196,13 +128,8 @@ def is_compact(graph, towns, max_distance):
     Return True if any two of the given nodes are reachable in graph
     within max_distance edges, False otherwise.
     """
-    subgraph = create_subgraph(graph, towns) # within a district
-    for town in towns: 
-        can_reach = find_nodes_within_distance(subgraph, town, max_distance) #finds nodes within max_distance 
-        for other_town in towns: #if another town in the distric is not reachable return false 
-            if other_town not in can_reach:
-                return False   
-    return True 
+    raise NotImplementedError
+
 
 def compute_valid_districts(
     graph,
@@ -232,14 +159,7 @@ def compute_valid_districts(
     Return a list of districts, each represented as a set of towns,
     where each town is a str.
     """
-    valid_combos = compute_town_combos(town_populations, num_districts)
-    
-    valid_districts = []
-    for combo in valid_combos:
-        if is_compact(graph, combo, max_distance):
-            valid_districts.append(combo)
-    
-    return valid_districts
+    raise NotImplementedError
 
 
 ############################################################
@@ -262,30 +182,7 @@ def town_combos_helper(towns, population_bounds, populations):
     Return a list of town combinations, each represented as a set of
     towns, where each town is a str.
     """
-
-    lower, upper = population_bounds
-    if len(towns) == 0: #no towns left to consider
-        if lower <= 0:  #met the population requirement
-            return [set()]
-        else:
-            return []  #didn't meet the lower bound
-
-    first = towns[0]
-    rest = towns[1:]
-
-    skip = town_combos_helper(rest, population_bounds, populations) #skip this town: bounds unchanged
-
-    if populations[first] > upper: #if taking this town would exceed upper bound, don't take it
-        return skip
-
-    new_bounds = (lower - populations[first], upper - populations[first]) # take this town subtract its population from both bounds
-    take = town_combos_helper(rest, new_bounds, populations)
-
-    take_with_first = []  #build up the sets by adding this town to all combos from "take" branch
-    for combo in take:
-        new_combo = combo | {first}  # add first to the set
-        take_with_first.append(new_combo)
-    return skip + take_with_first
+    raise NotImplementedError
 
 
 def compute_town_combos_pruning(town_populations, num_districts):
@@ -293,16 +190,7 @@ def compute_town_combos_pruning(town_populations, num_districts):
     Same functionality as compute_town_combos_naive(), but use a
     decision tree with pruning.
     """
-    
-    avg_population = sum(town_populations.values())/num_districts 
-    lower = avg_population - 0.1*avg_population #calculate the bounds (+or- 10%)
-    upper = avg_population + 0.1*avg_population
-
-    return town_combos_helper(
-        list(town_populations),
-        (lower, upper),
-        town_populations,
-    )
+    raise NotImplementedError
 
 
 ############################################################
@@ -324,24 +212,7 @@ def valid_partitions_helper(candidate_districts, num_districts, towns):
 
     Return a list of partitions, each represented as a list of districts.
     """
-    if len(candidate_districts) == 0: #no more candidate districts to consider
-        if num_districts == 0 and len(towns) == 0:
-            return [[]]  #valid solution return one empty partition to build on
-        else:
-            return []  #didn't cover all towns or didn't use right number of districts
-
-    first = candidate_districts[0]
-    rest = candidate_districts[1:]
-   
-    skip = valid_partitions_helper(rest, num_districts, towns)  #skip this district
-
-    if not first.issubset(towns): # prune if any town in this district is already covered
-        return skip
-
-    take = valid_partitions_helper(rest, num_districts - 1, towns - first) # take this district and remove its towns from remaining and reduce num_districts
-    take_with_first = [[first] + partition for partition in take] #build up partitions by adding this district to all partitions from "take" branch
-
-    return skip + take_with_first
+    raise NotImplementedError
 
 
 def compute_valid_partitions(graph, num_districts, candidate_districts):
@@ -363,11 +234,7 @@ def compute_valid_partitions(graph, num_districts, candidate_districts):
 
     Return a list of partitions, each represented as a list of districts.
     """
-    return valid_partitions_helper(
-        candidate_districts,
-        num_districts,
-        set(graph),
-    )
+    raise NotImplementedError
 
 
 ############################################################
@@ -459,29 +326,7 @@ def analyze_voting_outcomes(
 
     Return a dictionary containing the statistics described in the pset.
     """
-
-    
-    total_party1_votes, total_party2_votes = tally_popular_votes( #get popular votes
-        town_populations, voter_proportions
-    )
-
-    #get valid districts and partitions
-    valid_districts = compute_valid_districts(graph, town_populations, num_districts, max_distance, compute_town_combos_pruning)
-    all_partitions = compute_valid_partitions(graph, num_districts, valid_districts)
-    
-    #get partition statistics
-    num_partitions = len(all_partitions)
-    party1_wins, party2_wins, ties = tally_partition_outcomes(all_partitions, town_populations, voter_proportions)
-
-    return {
-        "proportion_party1_total_votes": round(
-            total_party1_votes / (total_party1_votes + total_party2_votes), 3
-        ),
-        "num_partitions": num_partitions,
-        "partition_party1_wins": party1_wins,
-        "partition_party2_wins": party2_wins,
-        "partition_ties": ties,
-    }
+    raise NotImplementedError
 
 
 ############################################################
@@ -490,14 +335,6 @@ def analyze_voting_outcomes(
 
 
 def manual_test_print_files(file_name, print_json=True, print_txt=True):
-    """
-    Given a file_name, optionally prints content of .json and .txt file.
-
-    Parameters:
-        file_name (str): Name of the file without 'txt' or 'json'.
-        print_txt (bool): Indicates whether the graph edges should be printed.
-        print_json (bool): Indicates whether the town information should be printed.
-    """
     file_path_json = f"data/{file_name}.json"
     data = read_data_from_file(file_path_json)
     file_path_txt = f"{os.path.dirname(__file__)}/{data[0]}"
@@ -512,13 +349,6 @@ def manual_test_print_files(file_name, print_json=True, print_txt=True):
 
 
 def manual_test_compute_town_combos_naive(file_name):
-    """
-    Prints all town combos for a small testcase through the
-        compute_town_combos_naive helper.
-
-    Parameters:
-        file_name (str): Name of the file without 'txt' or 'json'.
-    """
     file_path_json = f"data/{file_name}.json"
     graph_filepath, num_districts, town_populations, _ = read_data_from_file(
         file_path_json
@@ -531,12 +361,6 @@ def manual_test_compute_town_combos_naive(file_name):
 
 
 def manual_test_compute_town_combos_pruning(file_name):
-    """
-    Prints all town combos for a small testcase through the
-        compute_town_combos_pruning helper.
-    Parameters:
-        file_name (str): Name of the file without 'txt' or 'json'.
-    """
     file_path_json = f"data/{file_name}.json"
     graph_filepath, num_districts, town_populations, _ = read_data_from_file(
         file_path_json
@@ -553,16 +377,6 @@ def manual_test_compute_town_combos_pruning(file_name):
 def manual_test_compute_valid_districts(
     file_name, max_distance, compute_town_combos_function
 ):
-    """
-    Prints all valid district for a small testcase and plots the voronoi diagram.
-
-    Parameters:
-        file_name (str): Name of the file without 'txt' or 'json'.
-        max_distance (int): The 'compactness' constraint, aka max distance between two towns.
-        compute_town_combos_function (function): The procedure used to find valid town
-            combinations. In this pset, this is either compute_town_combos_naive() or
-            compute_town_combos_pruning().
-    """
     file_path_json = f"data/{file_name}.json"
     graph_filepath, num_districts, town_populations, _ = read_data_from_file(
         file_path_json
@@ -586,15 +400,6 @@ def manual_test_compute_valid_districts(
 def manual_test_compute_valid_partitions(
     file_name, max_distance=2, plot_n=5, print_vals=False
 ):
-    """
-    Prints all valid partitions for a small testcase and plots the color-coded voronoi diagram.
-
-    Parameters:
-        file_name (str): Name of the file without 'txt' or 'json'.
-        max_path_length (int): The 'compactness' constraint, aka max distance between two towns.
-        plot_n (int): The number of partitions to plot.
-        print_vals (bool): Whether to print the partitions.
-    """
     file_path_json = f"data/{file_name}.json"
     graph_filepath, num_districts, town_populations, _ = read_data_from_file(
         file_path_json
@@ -628,14 +433,6 @@ def manual_test_compute_valid_partitions(
 def manual_test_analyze_voting_outcomes(
     file_name, max_distance=2, print_outcomes=True
 ):
-    """
-    Prints the voting outcomes for all partitions for a small testcase.
-
-    Parameters:
-        file_name (str): Name of the file without 'txt' or 'json'.
-        max_distance (int): The 'compactness' constraint.
-        print_outcomes (bool): Whether to print the outcomes.
-    """
     file_path_json = f"data/{file_name}.json"
     (
         graph_filepath,
@@ -679,10 +476,10 @@ if __name__ == "__main__":
     # Feel free to modify or extend them when debugging your code.
     # Run test.py to make sure your code passes all our test cases.
 
-    manual_test_print_files("mini_1", True, True)
-    manual_test_compute_town_combos_naive("mini_1")
-    manual_test_compute_town_combos_pruning("mini_1")
-    manual_test_compute_valid_districts("mini_1", 2, compute_town_combos_naive)
-    manual_test_compute_valid_districts("mini_1", 2, compute_town_combos_pruning)
-    manual_test_compute_valid_partitions("mini_1")
-    manual_test_analyze_voting_outcomes("mini_1")
+    # manual_test_print_files("mini_1", True, True)
+    # manual_test_compute_town_combos_naive("mini_1")
+    # manual_test_compute_town_combos_pruning("mini_1")
+    # manual_test_compute_valid_districts("mini_1", 2, compute_town_combos_naive)
+    # manual_test_compute_valid_districts("mini_1", 2, compute_town_combos_pruning)
+    # manual_test_compute_valid_partitions("mini_1")
+    # manual_test_analyze_voting_outcomes("mini_1")

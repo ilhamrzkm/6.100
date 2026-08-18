@@ -3,9 +3,9 @@
 Problem Set 3
 
 Fill out the following info:
-Name: Sana Shah 
-Kerberos: sanashah
-Approximate time spent (HH:MM): 09:00
+Name:
+Kerberos:
+Approximate time spent (HH:MM):
 """
 
 import matplotlib.pyplot as plt
@@ -67,11 +67,7 @@ def center(x_vals):
         x_vals (list): x-values.
     Return a list of the centered x values.
     """
-    offset = x_vals[0] # want the first index to be 0 so offset everything by that amount 
-    centered = []
-    for i in x_vals: 
-        centered.append(i - offset) # create list with the offset values 
-    return centered
+    raise NotImplementedError
 
 
 def sse(y_true, y_pred):
@@ -105,23 +101,7 @@ def fit_line_exhaustive(x_vals, y_vals, a_values, b_values):
     Return a list [a, b, y_pred] representing the model y = ax + b and the
     predicted y-values associated with those coefficients.
     """
-    best_error = float("inf") #start with highest possible error 
-    best_a = 0 
-    best_b = 0 
-    best_predictions = []
-    for a in a_values: 
-        for b in b_values: 
-            y_pred = [] # list of predictions for the current a and b values 
-            for x in x_vals: # go through and calculate y for all the x values with the current a and b 
-                y = a*x + b 
-                y_pred.append(y)
-            error = sse(y_vals, y_pred) #compute the error 
-            if error < best_error: 
-                best_error = error #store all the values as the current best 
-                best_a = a 
-                best_b = b 
-                best_predictions = y_pred
-    return best_a, best_b, best_predictions
+    raise NotImplementedError
 
 
 def best_b_for_slope(x_vals, y_vals, a):
@@ -165,32 +145,8 @@ def fit_line_bisection(x_vals, y_vals, a_lo=-5.0, a_hi=5.0, epsilon=0.05):
     Return a list [a, b, y_pred] representing the model y = ax + b and the
     predicted y-values associated with those coefficients.
     """
-    best_a = 0
-    best_b = 0
-    best_y_pred = []
-    while a_hi - a_lo > epsilon: 
-        a_lo_slope = best_b_for_slope(x_vals, y_vals, a_lo)  #calculate slope 
-        a_hi_slope = best_b_for_slope(x_vals, y_vals, a_hi)  
-        y_pred_lo = [] 
-        y_pred_hi = []
-        for x in x_vals: # go through and calculate y for all the x values with the current a and b 
-            y_lo = a_lo*x + a_lo_slope 
-            y_pred_lo.append(y_lo)
-            y_hi = a_hi*x + a_hi_slope 
-            y_pred_hi.append(y_hi)
-        a_lo_error = sse(y_vals, y_pred_lo) #compute the error
-        a_hi_error = sse(y_vals, y_pred_hi)    
-        if a_lo_error < a_hi_error: # if the lower bound has smaller error 
-            a_hi = (a_lo + a_hi)/2 # do bisection on higher bound
-            best_a = a_lo
-            best_b = a_lo_slope
-            best_y_pred = y_pred_lo
-        else:      #if the higher bound has smaller error 
-            a_lo = (a_lo + a_hi)/2 # do bisection on lower bound 
-            best_a = a_hi
-            best_b = a_hi_slope
-            best_y_pred = y_pred_hi
-    return best_a, best_b, best_y_pred            
+    raise NotImplementedError
+
 
 def fit_line_polyfit(x_vals, y_vals):
     """
@@ -203,16 +159,8 @@ def fit_line_polyfit(x_vals, y_vals):
     Return a list [a, b, y_pred] representing the model y = ax + b and the
     predicted y-values associated with those coefficients.
     """
+    raise NotImplementedError
 
-    centered = center(x_vals)
-    coeff = np.polyfit(centered, y_vals, 1) #1st degree polynomial for line 
-    a = float(coeff[0])
-    b = float(coeff[1]+ a*x_vals[0]) #because of the centering add the slope * the offset 
-    y_pred = [] # list of predictions for the current a and b values 
-    for x in x_vals: # go through and calculate y for all the x values with the current a and b 
-        y = a*x + b 
-        y_pred.append(y)
-    return [a, b, y_pred]
 
 ############################################################
 # train/validation + k-fold cross-validation
@@ -232,16 +180,8 @@ def permute_xy(x_vals, y_vals):
 
     Return a list [x_perm, y_perm] of the permuted x-values and y-values.
     """
-    pairs = []
-    for i in range(len(x_vals)): 
-        pairs.append([x_vals[i], y_vals[i]])
-    shuffle_pairs = random.sample(pairs, len(x_vals))
-    x_perm = []
-    y_perm = []
-    for i in range(len(x_vals)):
-        x_perm.append(shuffle_pairs[i][0])
-        y_perm.append(shuffle_pairs[i][1])
-    return x_perm, y_perm
+    raise NotImplementedError
+
 
 def train_validate_split(x_vals, y_vals, val_frac=0.2):
     """
@@ -256,13 +196,8 @@ def train_validate_split(x_vals, y_vals, val_frac=0.2):
     training set, y-values in the training set, x-values in the validation
     set and y-values in the validation set.
     """
-    index = int(len(x_vals)*val_frac)
-    shuff = permute_xy(x_vals, y_vals)
-    x_val = shuff[0][:index] 
-    y_val = shuff[1][:index]
-    x_train = shuff[0][index:]
-    y_train = shuff[1][index:]
-    return [x_train, y_train, x_val, y_val]
+    raise NotImplementedError
+
 
 def r2_score(y_true, y_pred):
     """
@@ -301,15 +236,7 @@ def evaluate_poly_degree(x_vals, y_vals, degree, k_or_val_frac=0.2):
 
     Return a float val_r2 representing the R^2 value on the validation set.
     """
-    split = train_validate_split(x_vals, y_vals, k_or_val_frac)
-    coeff = np.polyfit(split[0], split[1], degree) #get the polyfit for the training data 
-    y_pred = [] 
-    for x in split[2]: #loop through all x values in the validation
-        y = 0 
-        for i in range(0, degree + 1): 
-            y += float(coeff[-(i+1)]*(x**i)) #reverse degree order from polyfit and then multiply with x degree 
-        y_pred.append(y)
-    return float(r2_score(split[3], y_pred)) #compare y_val with the y_pred 
+    raise NotImplementedError
 
 
 def make_folds(x_perm, y_perm, k=5):
@@ -324,23 +251,7 @@ def make_folds(x_perm, y_perm, k=5):
     Return a list [folds_x, folds_y], where folds_x is a list of k lists
     of x-values and folds_y is a list of k lists of y-values.
     """
-    base = len(x_perm) // k
-    remainder = len(x_perm) % k
-    folds_x = []
-    folds_y = []
-    start = 0 
-    for i in range(k):
-        if i < remainder:   #extra element for the remainder amount of folds
-            size = base + 1
-        else:
-            size = base
-        end = start + size
-        fold_x = x_perm[start:end] #each fold has length of size 
-        fold_y = y_perm[start:end]
-        folds_x.append(fold_x)
-        folds_y.append(fold_y)
-        start = end
-    return [folds_x, folds_y]
+    raise NotImplementedError
 
 
 def get_validation_scores(folds_x, folds_y, degree, k):
@@ -358,28 +269,8 @@ def get_validation_scores(folds_x, folds_y, degree, k):
     Return a list of floats `fold_r2s` of length k, where fold_r2s[i] is
     the R^2 score on validation fold i.
     """
-    fold_r2s = []
+    raise NotImplementedError
 
-    for i in range(k):  #training set is all folds except fold i
-        train_x = []
-        train_y = []
-        for j in range(k):
-            if j != i:
-                train_x += folds_x[j]
-                train_y += folds_y[j]    
-        val_x = folds_x[i] # Validation set is fold i
-        val_y = folds_y[i]
-        coeff = np.polyfit(train_x, train_y, degree) #fit polynomial on training folds
-        y_pred = [] 
-        for x in val_x: # compare with held-out fold
-            y = 0
-            for d in range(degree + 1):
-                y += float(coeff[-(d + 1)] * (x ** d)) #flip so that lowest to highest and add 1 to fix index
-            y_pred.append(y)
-
-        fold_r2s.append(r2_score(val_y, y_pred))
-
-    return fold_r2s
 
 def k_fold_cv(x_vals, y_vals, degree, k_or_val_frac=5):
     """
@@ -431,22 +322,7 @@ def compare_poly_degrees(
     Return a list [degree, vals] pairs sorted by degree, where
     vals = [coeffs, y_pred, val_r2].
     """
-    fig, ax = scatter_plot(x_vals, y_vals, title="Polynomial Degree Comparison", # Scatter plot of full dataset
-                           xlabel="Year", ylabel="Total Disasters", show_plot=False)
-
-    centered_x = center(x_vals)
-    results = []
-    for degree in degrees:
-        coeffs = np.polyfit(centered_x, y_vals, degree) #full dataset using centered x
-        y_pred = [float(np.polyval(coeffs, cx)) for cx in centered_x] # predict using centered x plot over original x_vals
-        val_r2 = val_method(x_vals, y_vals, degree, k_or_val_frac) #original x_vals
-        ax.plot(x_vals, y_pred, label=f"Degree {degree} (R²={val_r2:.3f})") # Plot curve over original (uncentered) years
-        results.append([degree, [coeffs, y_pred, val_r2]])
-    ax.legend()
-    if show_plot:
-        plt.show()
-    results.sort(key=lambda pair: pair[0]) # sort by degree and return
-    return results
+    raise NotImplementedError
 
 
 ############################################################
@@ -466,7 +342,7 @@ def permute_y(y_vals):
 
     Return a list of a permuted copy of y with the same shape.
     """
-    return random.sample(y_vals, len(y_vals))
+    raise NotImplementedError
 
 
 def trend_permutation_test(
@@ -485,21 +361,8 @@ def trend_permutation_test(
     Return a list [a_obs, p_value, null_lo, null_hi] containing the observed
     slope, p-value after running the test, lower bound of the null interval,
     and upper bound of the null interval.
-    """ 
-    a_obs, _, _ = method(x_vals, y_vals) #observed slope
-    null_slopes = []
-    for _ in range(n_permutations): # make distribution by permuting y and re-fitting
-        y_perm = permute_y(y_vals)
-        a_perm, _, _ = method(x_vals, y_perm)
-        null_slopes.append(a_perm)
-    count = 0
-    for a in null_slopes: 
-        if abs(a) >= abs(a_obs): #two-tailed p-value
-            count += 1 
-    p_value = count / n_permutations
-    null_lo = float(np.percentile(null_slopes, 2.5)) #95% interval
-    null_hi = float(np.percentile(null_slopes, 97.5))
-    return [a_obs, p_value, null_lo, null_hi]
+    """
+    raise NotImplementedError
 
 
 def temp_trend_analysis(x_vals, y_vals, show_plot=True, n_permutations=2000):
@@ -582,7 +445,6 @@ def manual_test_fit_line_exhaustive():
     print("Manual test fit_line_exhaustive()...")
     x, y = get_tiny_line_data()
 
-    # include the true values in the candidate grids
     a_values = [0, 1, 2, 3]
     b_values = [0, 1, 2]
     a, b, y_pred = fit_line_exhaustive(x, y, a_values, b_values)
@@ -597,7 +459,6 @@ def manual_test_fit_line_bisection():
     print("Manual test fit_line_bisection()...")
     x, y = get_tiny_line_data()
 
-    # bisection is approximate; we just sanity-check closeness
     a, b, y_pred = fit_line_bisection(x, y, a_lo=-5.0, a_hi=5.0, epsilon=1e-4)
     print(f"Expected slope close to 2, got {a}")
     print(f"Expected intercept close to 1, got {b}")
@@ -641,7 +502,6 @@ def manual_test_train_validate_split():
     print(f"Expected val size 2 (20% of 10), got {len(x_val)}")
     print(f"Train size should be 8, got {len(x_train)}")
 
-    # quick alignment sanity check: y should still be 2x+1 for each pair
     ok_train = True
     for i in range(len(x_train)):
         if y_train[i] != 2 * x_train[i] + 1:
@@ -675,7 +535,6 @@ def manual_test_evaluate_poly_degree_on_perfect_line():
 def manual_test_k_fold_cv_on_perfect_line():
     print("Manual test k_fold_cv() on perfect line...")
 
-    # Perfect linear relationship: any fold should get R^2 = 1 for degree=1
     x = list(range(10))
     y = []
     for xi in x:
@@ -706,7 +565,6 @@ def manual_test_compare_poly_degrees():
 def manual_test_trend_permutation_test():
     print("Manual test trend_permutation_test()...")
 
-    # strong positive trend should yield small-ish p-value (not guaranteed, but usually)
     x = list(range(50))
     y = []
     for xi in x:
@@ -778,9 +636,9 @@ if __name__ == "__main__":
     # manual_test_fit_line_bisection()
     # manual_test_permute_helpers()
     # manual_test_train_validate_split()
-    manual_test_evaluate_poly_degree_on_perfect_line()
-    manual_test_k_fold_cv_on_perfect_line()
-    manual_test_trend_permutation_test()
-    manual_test_compare_poly_degrees()
-    manual_test_temp_trend_analysis()
-    manual_test_temp_trend_analysis_indoor()
+    # manual_test_evaluate_poly_degree_on_perfect_line()
+    # manual_test_k_fold_cv_on_perfect_line()
+    # manual_test_trend_permutation_test()
+    # manual_test_compare_poly_degrees()
+    # manual_test_temp_trend_analysis()
+    # manual_test_temp_trend_analysis_indoor()
